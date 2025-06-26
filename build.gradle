@@ -1,0 +1,13 @@
+plugins {
+	id 'java-library'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	testImplementation 'junit:junit:4.13.2'
+
+	compileOnly("org.projectlombok:lombok:1.18.38")
+}
