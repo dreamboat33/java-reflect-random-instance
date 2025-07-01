@@ -1,5 +1,6 @@
 package util.reflect;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -13,6 +14,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import org.junit.Test;
@@ -44,6 +46,16 @@ public class RandomInstanceTest {
 
 	private static class TestClass<K, V> extends TestBaseClass<V[]> {
 		Map<List<? extends List<K>>, V> theMap;
+	}
+
+	@Test
+	public void seededRandomInstanceTest() throws ReflectiveOperationException {
+		ClassContext<ElementClass> classContext = ClassUtil.analyze(ElementClass.class);
+		ElementClass instance = classContext.randomInstance(new DefaultValueGenerator(new Random(0)));
+
+		assertEquals(-1155484576, instance.intField);
+		assertArrayEquals(new Double[] { 0.6063452159973596, 0.3090505681997092, 0.11700660880722513, 0.7815346320453048, 0.2527761665759859}, instance.doubleArray);
+		assertEquals("a8b6fded-32df-30ca-bb2c-45a4b5944569", instance.stringField);
 	}
 
 	@Test

@@ -70,7 +70,15 @@ public interface ValueGenerator {
 		protected int MIN_COLLECTION_SIZE = 3;
 		protected int MAX_COLLECTION_SIZE = 5;
 
-		protected Random random = new Random();
+		protected Random random;
+
+		public DefaultValueGenerator() {
+			this(new Random());
+		}
+
+		public DefaultValueGenerator(Random random) {
+			this.random = random == null ? new Random() : random;
+		}
 
 		protected Instant randomTimeInstant() {
 			return Instant.ofEpochMilli(MIN_TIMESTAMP + (long)(random.nextDouble() * (MAX_TIMESTAMP - MIN_TIMESTAMP + 1)));
@@ -117,7 +125,11 @@ public interface ValueGenerator {
 			if (clazz == float.class || clazz == Float.class) return random.nextFloat();
 			if (clazz == double.class || clazz == Double.class) return random.nextDouble();
 
-			if (clazz == String.class) return UUID.randomUUID().toString();
+			if (clazz == String.class) {
+				byte[] bytes = new byte[16];
+				random.nextBytes(bytes);
+				return UUID.nameUUIDFromBytes(bytes).toString();
+			}
 
 			if (clazz.isEnum()) {
 				Object[] enums = clazz.getEnumConstants();
